@@ -12,6 +12,7 @@ program
 program.parse();
 const options = program.opts();
 
+// Перевіряємо доступність файлу (F_OK означає перевірку на існування)
 fs.access(options.input, fs.constants.F_OK, (err) => {
   if (err) {
     console.error('Cannot find input file');
@@ -19,6 +20,7 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
   }
 
   const server = http.createServer((req, res) => {
+    // Перетворюємо сирий рядок на зручний об'єкт
     const Url = new URL(req.url, `http://${options.host}:${options.port}`)
 
     if (Url.pathname == "/") {
@@ -55,6 +57,14 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
             }));
             
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          if(options.output){
+            const  RESPON = JSON.stringify(result)
+            fs.writeFile(options.output,RESPON,function(err){
+              if(err){
+                  console.log(err)
+              }
+            })
+          }
           return res.end(JSON.stringify(result))
         }
 
@@ -75,6 +85,14 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
             }));
             
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          if(options.output){
+            const  RESPON = JSON.stringify(result)
+            fs.writeFile(options.output,RESPON,function(err){
+              if(err){
+                  console.log(err)
+              }
+            })
+          }
           return res.end(JSON.stringify(result));
         }
 
@@ -87,6 +105,14 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
           }));
           
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          if(options.output){
+            const  RESPON = JSON.stringify(result)
+            fs.writeFile(options.output,RESPON,function(err){
+              if(err){
+                  console.log(err)
+              }
+            })
+          }
           return res.end(JSON.stringify(result))
         }
 
@@ -96,17 +122,27 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
               petal_width: Number(par["petal.width"]) 
           }))
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          if(options.output){
+            const  RESPON = JSON.stringify(result)
+            fs.writeFile(options.output,RESPON,function(err){
+              if(err){
+                  console.log(err)
+              }
+            })
+          }
           return res.end(JSON.stringify(result))
         }
 
       }); 
 
     } else {
+      // Якщо маршрут не "/"
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' })
       res.end('Помилка 404: Маршрут не знайдено')
     }
   });
 
+  // Запуск сервера
   server.listen(options.port, options.host, () => {
     console.log(`Сервер успішно запущено.`)
     console.log(`Слухаю на http://${options.host}:${options.port}/`)
