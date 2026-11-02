@@ -33,9 +33,19 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
           .split('\n')
           .filter(line => line.trim() !== "")
           .map(line => JSON.parse(line));
-          
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
-        res.end(JSON.stringify(iris))
+        
+        const minPetalLengthParam = Url.searchParams.get('min_petal_length')
+        const varietyParam = Url.searchParams.get('variety')
+
+        if(minPetalLengthParam == null && varietyParam == null){
+          const result = iris.map(par =>({
+              petal_length: Number(par["petal.length"]),
+              petal_width: Number(par["petal.width"]) 
+          }))
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          return res.end(JSON.stringify(result))
+        }
+
       }); 
 
     } else {
