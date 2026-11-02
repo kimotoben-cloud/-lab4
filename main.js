@@ -23,8 +23,21 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
 
     if (Url.pathname == "/") {
       
-      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' })
-      res.end('Сервер працює')
+      fs.readFile(options.input, 'utf8', function(err, data) {
+        if(err){
+            res.writeHead(500,{ 'Content-Type': 'text/plain; charset=utf-8' })
+            return res.end('Помилка 500: Неможливо прочитати файл даних')
+        }
+        
+        const iris = data
+          .split('\n')
+          .filter(line => line.trim() !== "")
+          .map(line => JSON.parse(line));
+          
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify(iris))
+      }); 
+
     } else {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' })
       res.end('Помилка 404: Маршрут не знайдено')
