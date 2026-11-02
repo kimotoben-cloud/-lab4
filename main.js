@@ -37,7 +37,60 @@ fs.access(options.input, fs.constants.F_OK, (err) => {
         const minPetalLengthParam = Url.searchParams.get('min_petal_length')
         const varietyParam = Url.searchParams.get('variety')
 
-        if(minPetalLengthParam == null && varietyParam == null){
+        // 1. ßÊÙÎ ª ÎÁÈÄÂÀ ÏÀĞÀÌÅÒĞÈ
+        if (minPetalLengthParam !== null && varietyParam === "true") {
+          const minLength = Number(minPetalLengthParam)
+          
+          if (isNaN(minLength)) {
+            res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' })
+            return res.end('Ïîìèëêà 400: min_petal_length ìàº áóòè ÷èñëîì')
+          }
+          
+          const result = iris
+            .filter(par => Number(par["petal.length"]) > minLength)
+            .map(par => ({ 
+              petal_length: Number(par["petal.length"]), 
+              petal_width: Number(par["petal.width"]), 
+              variety: par.variety
+            }));
+            
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          return res.end(JSON.stringify(result))
+        }
+
+        // 2. ßÊÙÎ ª Ò²ËÜÊÈ ÄÎÂÆÈÍÀ (min_petal_length)
+        else if (minPetalLengthParam !== null) {
+          const minLength = Number(minPetalLengthParam)
+          
+          if (isNaN(minLength)) {
+            res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' })
+            return res.end('Ïîìèëêà 400: min_petal_length ìàº áóòè ÷èñëîì')
+          }
+          
+          const result = iris
+            .filter(par => Number(par["petal.length"]) > minLength)
+            .map(par => ({ 
+              petal_length: Number(par["petal.length"]),
+              petal_width: Number(par["petal.width"])
+            }));
+            
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          return res.end(JSON.stringify(result));
+        }
+
+        // 3. ßÊÙÎ ª Ò²ËÜÊÈ VARIETY
+        else if (varietyParam === "true") {
+          const result = iris.map(par => ({ 
+            petal_length: Number(par["petal.length"]),
+            petal_width: Number(par["petal.width"]),
+            variety: par.variety 
+          }));
+          
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          return res.end(JSON.stringify(result))
+        }
+
+        else if(minPetalLengthParam == null && varietyParam == null){
           const result = iris.map(par =>({
               petal_length: Number(par["petal.length"]),
               petal_width: Number(par["petal.width"]) 
