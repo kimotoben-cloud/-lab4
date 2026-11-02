@@ -1,0 +1,26 @@
+{
+  "name": "rep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+"start": "node app.js",
+  "dev": "node --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/p3090632-commits/REP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/p3090632-commits/REP/issues"
+  },
+  "homepage": "https://github.com/p3090632-commits/REP#readme",
+  "dependencies": {
+    "commander": "^15.0.0"
+  }
+}
